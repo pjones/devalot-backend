@@ -104,11 +104,15 @@ makeMail a = m { mailTo      = [to]
                , mailParts   = [[body]]
                , mailHeaders = hdrs
                }
-  where m    = emptyMail from
-        from = Address (Just . T.pack $ fbName a) (T.pack $ fbEmail a)
-        to   = Address (Just "Peter Jones") "pjones@devalot.com"
+  where m = emptyMail from
+        sender = Address (Just . T.pack $ fbName a) (T.pack $ fbEmail a)
+        from = Address (Just "No Reply") "noreply@devalot.com"
+        to = Address (Just "Peter Jones") "pjones@devalot.com"
         subj = "[Devalot] Feedback Message"
-        hdrs = [("Subject", subj), ("X-Devalot", "Yes")]
+        hdrs = [ ("Subject", subj)
+               , ("Reply-To", renderAddress sender)
+               , ("X-Devalot", "Yes")
+               ]
         body = Part { partType = "text/plain; charset=utf-8"
                     , partEncoding = QuotedPrintableText
                     , partFilename = Nothing
