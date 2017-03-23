@@ -13,6 +13,7 @@ import Control.Monad.Reader.Class (ask)
 import Control.Monad.Trans (liftIO)
 import Data.Aeson
 import Data.ByteString (ByteString)
+import qualified Data.ByteString.Lazy as Lazy
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as LT
 import qualified Data.Text.Lazy.Encoding as LT
@@ -90,7 +91,12 @@ feedbackHandler = do
 
 --------------------------------------------------------------------------------
 sendFeedbackMail :: Message -> IO ()
-sendFeedbackMail = renderSendMail . makeMail
+sendFeedbackMail msg = do
+    rendered <- renderMail' (makeMail msg)
+    nixSendMail rendered
+  where
+    nixSendMail :: Lazy.ByteString -> IO ()
+    nixSendMail = sendmailCustom "/var/setuid-wrappers/sendmail" ["-t"]
 
 --------------------------------------------------------------------------------
 makeMail :: Message -> Mail
