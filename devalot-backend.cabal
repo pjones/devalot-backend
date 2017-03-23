@@ -35,10 +35,11 @@ executable devalot-backend
   main-is: backend.hs
   ghc-options: -Wall -Werror -fwarn-incomplete-uni-patterns
   default-language: Haskell2010
-  build-depends: base            >= 4.4   && < 5.0
-               , snap            >= 0.13  && < 1.1
-               , snap-server     >= 0.8   && < 1.1
+  build-depends: base
+               , bytestring
                , devalot-backend
+               , snap
+               , snap-server
 
 ------------------------------------------------------------------------------
 test-suite test
