@@ -7,7 +7,6 @@ module Main (main) where
 --------------------------------------------------------------------------------
 import Data.ByteString (ByteString)
 import qualified Data.ByteString as ByteString
-import Data.Monoid
 import Devalot.Backend.App (appInit)
 import Snap (MonadSnap)
 import qualified Snap.Http.Server.Config as Config
