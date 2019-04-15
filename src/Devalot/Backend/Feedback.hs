@@ -1,31 +1,38 @@
+{-# LANGUAGE DataKinds         #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TypeOperators     #-}
 
 --------------------------------------------------------------------------------
-module Devalot.Backend.Snaplets.Feedback
-       ( Feedback
-       , feedbackInit
-       , feedbackHandler -- FIXME: remove this after fixing Snap
+module Devalot.Backend.Feedback
+       ( feedbackServer
+       , feedbackAPI
        ) where
 
 --------------------------------------------------------------------------------
 import Control.Applicative (empty)
-import Control.Monad.Reader.Class (ask)
+import Control.Monad (unless)
+import Control.Monad.Except (throwError)
 import Control.Monad.Trans (liftIO)
 import Data.Aeson
-import Data.ByteString (ByteString)
-import qualified Data.ByteString.Lazy as Lazy
+import Data.Proxy
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as LT
 import qualified Data.Text.Lazy.Encoding as LT
 import Network.Mail.Mime
-import Snap.Core
-import Snap.Snaplet
+import Servant.API
+import Servant.Server
+import System.Directory (findExecutable)
 
 --------------------------------------------------------------------------------
-data Feedback = Feedback
-  { feedbackKey  :: String -- ^ The secret key to expect.
-  , feedbackLive :: Bool   -- ^ Actually send mail or not.
-  } deriving (Show)
+type FeedbackAPI = "feedback.json" :> ReqBody '[JSON] Message :> Post '[JSON] NoContent
+
+--------------------------------------------------------------------------------
+feedbackAPI :: Proxy FeedbackAPI
+feedbackAPI = Proxy
+
+--------------------------------------------------------------------------------
+feedbackServer :: Server FeedbackAPI
+feedbackServer = feedback
 
 --------------------------------------------------------------------------------
 data Message = Message
@@ -49,54 +56,20 @@ staticKey :: String
 staticKey = "bm9zcGFtCg"
 
 --------------------------------------------------------------------------------
--- | The built in routes for this snaplet.
-routes :: [(ByteString, Handler b Feedback ())]
-routes =
-  [ -- Incoming from contact.html, sends email to me
-    ("feedback.json", feedbackHandler)
-  ]
-
---------------------------------------------------------------------------------
--- | Application initializer.
-feedbackInit :: SnapletInit b Feedback
-feedbackInit = makeSnaplet "feedback" "Form mailer" Nothing $ do
-  env <- getEnvironment
-  addRoutes routes
-
-  return $! Feedback { feedbackKey  = staticKey
-                     , feedbackLive = env == "production"
-                     }
-
---------------------------------------------------------------------------------
-feedbackHandler :: Handler b Feedback ()
-feedbackHandler = do
-  body <- readRequestBody 2048
-  fb   <- ask
-
-  let live = feedbackLive fb
-      key  = feedbackKey  fb
-      msg  = decode body
-      bad  = modifyResponse (setResponseStatus 400 "Bad Request")
-
-  -- Decide what to do based on three conditions.
-  case (live, msg, (== key) . fbKey <$> msg) of
-    (_,     Nothing, _         ) -> bad -- Bad decode.
-    (_,     Just _,  Nothing   ) -> bad -- Bad decode or bad key.
-    (_,     Just _,  Just False) -> bad -- Bad key.
-    (True,  Just x,  Just  True) -> liftIO $ sendFeedbackMail x
-    (False, Just x,  Just  True) -> liftIO $ putStrLn ("Message from: " ++ fbName x)
-
-  -- Apache fails unless you set Content-Length to 0.
-  modifyResponse $ setContentLength 0 . setContentType "application/json"
+feedback :: Message -> Handler NoContent
+feedback msg = do
+  unless (fbKey msg == staticKey) (throwError err401)
+  liftIO (sendFeedbackMail msg)
+  return NoContent
 
 --------------------------------------------------------------------------------
 sendFeedbackMail :: Message -> IO ()
 sendFeedbackMail msg = do
-    rendered <- renderMail' (makeMail msg)
-    nixSendMail rendered
-  where
-    nixSendMail :: Lazy.ByteString -> IO ()
-    nixSendMail = sendmailCustom "/var/setuid-wrappers/sendmail" ["-t"]
+    exec <- findExecutable "sendmail"
+
+    case exec of
+      Nothing -> return ()
+      Just f  -> renderMail' (makeMail msg) >>= sendmailCustom f ["-t"]
 
 --------------------------------------------------------------------------------
 makeMail :: Message -> Mail
