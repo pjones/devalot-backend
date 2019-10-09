@@ -88,7 +88,7 @@ makeMail a = m { mailTo      = [to]
                ]
         body = Part { partType = "text/plain; charset=utf-8"
                     , partEncoding = QuotedPrintableText
-                    , partFilename = Nothing
                     , partHeaders  = []
-                    , partContent  = LT.encodeUtf8 . LT.pack $ fbText a
+                    , partDisposition = DefaultDisposition
+                    , partContent  = PartContent $ LT.encodeUtf8 . LT.pack $ fbText a
                     }
