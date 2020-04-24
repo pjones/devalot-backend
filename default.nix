@@ -1,20 +1,21 @@
-{ pkgs ? (import <nixpkgs> {}).pkgs }:
+{ sources ? import ./nix/sources.nix
+, pkgs ? import sources.nixpkgs { }
+, nix-hs ? import sources.nix-hs { inherit pkgs; }
+, ghcide ? sources.ghcide-nix
+, ormolu ? sources.ormolu
+, ghc ? "default"
+}:
 
-let
-  # List any extra packages you want available while your package is
-  # building or while in a nix shell:
-  extraPackages = with pkgs; [ ];
+nix-hs {
+  cabal = ./devalot-backend.cabal;
+  compiler = ghc;
 
-  # Helpful if you want to override any Haskell packages:
-  haskell = pkgs.haskellPackages;
-in
+  overrides = lib: self: super: with lib; {
+    ghcide = import ghcide {};
 
-# Load the local nix file and use the overrides from above:
-haskell.callPackage ./devalot-backend.nix {
-  mkDerivation = { buildTools ? []
-                 , ...
-                 }@args:
-    haskell.mkDerivation (args // {
-      buildTools = buildTools ++ extraPackages;
-    });
+    ormolu = (import ormolu {
+      inherit (lib) pkgs;
+      ormoluCompiler = lib.compilerName;
+    }).ormolu;
+  };
 }

@@ -2,7 +2,7 @@ cabal-version: 2.2
 
 --------------------------------------------------------------------------------
 name:          devalot-backend
-version:       2.0.0.1
+version:       2.0.1.0
 homepage:      http://www.devalot.com
 license:       BSD-2-Clause
 license-file:  LICENSE
@@ -29,7 +29,7 @@ common dependencies
                , servant-server >= 0.14  && < 0.17
                , text           >= 0.10  && < 1.3
                , wai            >= 3.2   && < 3.3
-               , warp           >= 3.2   && < 3.3
+               , warp           >= 3.2   && < 3.4
 
 ------------------------------------------------------------------------------
 library
