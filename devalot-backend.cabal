@@ -1,46 +1,53 @@
 cabal-version: 2.2
-
---------------------------------------------------------------------------------
 name:          devalot-backend
+synopsis:      Backend for Devalot.com
+description:   A really stupid and simple backend process.
 version:       2.0.1.0
 homepage:      http://www.devalot.com
 license:       BSD-2-Clause
 license-file:  LICENSE
 author:        Peter Jones <pjones@devalot.com>
 maintainer:    Peter Jones <pjones@devalot.com>
-copyright:     Copyright (C) 2013-2019 Peter Jones
+copyright:     Copyright (C) 2013-2021 Peter Jones
 category:      Web
 build-type:    Simple
 
 --------------------------------------------------------------------------------
+source-repository head
+  type:     git
+  location: https://github.com/pjones/devalot-backend.git
+
+--------------------------------------------------------------------------------
 common options
   default-language: Haskell2010
-  ghc-options: -Wall -fwarn-incomplete-uni-patterns -Wincomplete-record-updates
+  ghc-options:
+    -Wall -fwarn-incomplete-uni-patterns -Wincomplete-record-updates
 
 --------------------------------------------------------------------------------
 common dependencies
-  build-depends: base           >= 4.9   && < 5.0
-               , aeson          >= 1.3   && < 1.5
-               , bytestring     >= 0.8   && < 0.11
-               , directory      >= 1.3   && < 1.4
-               , mime-mail      >= 0.3   && < 0.6
-               , mtl            >= 2.0   && < 2.3
-               , servant        >= 0.14  && < 0.17
-               , servant-server >= 0.14  && < 0.17
-               , text           >= 0.10  && < 1.3
-               , wai            >= 3.2   && < 3.3
-               , warp           >= 3.2   && < 3.4
+  build-depends:
+    , aeson           >=1.3  && <1.6
+    , base            >=4.9  && <5.0
+    , bytestring      >=0.8  && <0.12
+    , directory       ^>=1.3
+    , mime-mail       >=0.3  && <0.6
+    , mtl             >=2.0  && <2.3
+    , servant         >=0.14 && <0.19
+    , servant-server  >=0.14 && <0.19
+    , text            >=0.10 && <1.3
+    , wai             ^>=3.2
+    , warp            >=3.2  && <3.4
 
 ------------------------------------------------------------------------------
 library
-  import: options, dependencies
-  hs-source-dirs: src
+  import:          options, dependencies
+  hs-source-dirs:  src
   exposed-modules:
     Devalot.Backend.App
     Devalot.Backend.Feedback
 
 ------------------------------------------------------------------------------
 executable devalot-backend
-  import: options, dependencies
-  main-is: backend.hs
+  import:        options, dependencies
+  main-is:       backend.hs
   build-depends: devalot-backend

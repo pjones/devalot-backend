@@ -1,50 +1,38 @@
 {
-    "ghcide-nix": {
-        "ref": "master",
-        "repo": "https://code.devalot.com/pjones/ghcide-nix.git",
-        "rev": "471990016e47f6eaab5d6aeeb2da6f58aa581bb7",
-        "type": "git"
-    },
     "niv": {
         "branch": "master",
         "description": "Easy dependency management for Nix projects",
         "homepage": "https://github.com/nmattia/niv",
         "owner": "nmattia",
         "repo": "niv",
-        "rev": "f73bf8d584148677b01859677a63191c31911eae",
-        "sha256": "0jlmrx633jvqrqlyhlzpvdrnim128gc81q5psz2lpp2af8p8q9qs",
+        "rev": "af958e8057f345ee1aca714c1247ef3ba1c15f5e",
+        "sha256": "1qjavxabbrsh73yck5dcq8jggvh3r2jkbr6b5nlz5d9yrqm9255n",
         "type": "tarball",
-        "url": "https://github.com/nmattia/niv/archive/f73bf8d584148677b01859677a63191c31911eae.tar.gz",
+        "url": "https://github.com/nmattia/niv/archive/af958e8057f345ee1aca714c1247ef3ba1c15f5e.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nix-hs": {
-        "ref": "next",
-        "repo": "https://code.devalot.com/open/nix-hs.git",
-        "rev": "b267b7dff1e83909e537b5e9af7de0975caf112c",
-        "type": "git"
-    },
-    "nixpkgs": {
-        "branch": "nixos-20.03",
-        "description": "A read-only mirror of NixOS/nixpkgs tracking the released channels. Send issues and PRs to",
-        "homepage": "https://github.com/NixOS/nixpkgs",
-        "owner": "NixOS",
-        "repo": "nixpkgs-channels",
-        "rev": "95b9c99f6d091273572ff1ec62b97b6ad3f68bdf",
-        "sha256": "1qcwr9binkwfayix88aljwssxi5djkwscx0rnwlk1yp9q60rgp3d",
+        "branch": "release-21.05",
+        "description": "Haskell + nixpkgs = nix-hs",
+        "homepage": "",
+        "owner": "pjones",
+        "repo": "nix-hs",
+        "rev": "11e961e744b212b4e6d69406c003e43a58c487fc",
+        "sha256": "0xnxwsyxq8v5wgp8w65cr3lncv5s12mj5siybn7rffslkfraqw3i",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs-channels/archive/95b9c99f6d091273572ff1ec62b97b6ad3f68bdf.tar.gz",
+        "url": "https://github.com/pjones/nix-hs/archive/11e961e744b212b4e6d69406c003e43a58c487fc.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
-    "ormolu": {
-        "branch": "master",
-        "description": "A formatter for Haskell source code",
-        "homepage": null,
-        "owner": "tweag",
-        "repo": "ormolu",
-        "rev": "d579a48f48cf732730fd958a2903c8a045dff146",
-        "sha256": "0hpzvmvf08hbzc1pzv8iy7lzx6dzv2908722a70j5wriaxvabdd5",
+    "nixpkgs": {
+        "branch": "nixos-21.05",
+        "description": "Nix Packages collection",
+        "homepage": "",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "eaba7870ffc3400eca4407baa24184b7fe337ec1",
+        "sha256": "115disiz4b08iw46cidc7lm0advrxn5g2ldmlrxd53zf03skyb2w",
         "type": "tarball",
-        "url": "https://github.com/tweag/ormolu/archive/d579a48f48cf732730fd958a2903c8a045dff146.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/eaba7870ffc3400eca4407baa24184b7fe337ec1.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }
